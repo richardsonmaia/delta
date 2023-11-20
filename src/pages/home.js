@@ -63,7 +63,7 @@ export default function App() {
       preco: "R$35.99",
     },
     {
-      id: "4",
+      id: "7",
       image: require("../../assets/ImagemVinhoVina.png"),
       nome: "Viña de Los Andes Red Blend",
       preco: "R$19.99",
@@ -90,7 +90,7 @@ export default function App() {
       preco: "R$35.99",
     },
     {
-      id: "4",
+      id: "7",
       image: require("../../assets/ImagemVinhoVina.png"),
       nome: "Viña de Los Andes Red Blend",
       preco: "R$19.99",
