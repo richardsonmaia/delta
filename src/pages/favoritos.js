@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import { StatusBar } from "expo-status-bar";
 import {
-  View,
+  StyleSheet,
   Text,
+  View,
+  TextInput,
   TouchableOpacity,
   Image,
-  TextInput,
-  StyleSheet,
 } from "react-native";
+import { useState } from "react";
 
 export default function App() {
-  const [searchText, setSearchText] = useState("Pesquisar");
-  const clearSearchText = () => {
-    setSearchText("");
+  const [texto, setTexto] = useState("Pesquisar");
+  const limparTexto = () => {
+    setTexto("");
   };
 
   const [selectedFilter, setSelectedFilter] = useState(null);
@@ -26,101 +27,82 @@ export default function App() {
     };
   };
 
-  const filters = [
-    { id: "1", image: require("../../assets/argentina.png") },
-    { id: "2", image: require("../../assets/brasil.png") },
-    { id: "3", image: require("../../assets/chile.png") },
-    { id: "4", image: require("../../assets/portugal.png") },
-  ];
-
-  const wineTypes = [
-    {
-      id: "1",
-      name: "Vinho Argentino",
-      filter: "1",
-      wines: [
-        {
-          id: "1",
-          image: require("../../assets/ImagemVinhoExpedicion.png"),
-          nome: "Paisajes de Los Andes Classic Sauvignon Blanc 2020",
-        },
-
-        {
-          id: "2",
-          image: require("../../assets/ImagemVinhoGrupa.png"),
-          nome: "La Grupa Gran Selección Malbec ",
-        },
-
-      ],
-    },
-
-    {
-      id: "2",
-      name: "Vinho Brasileiro",
-      filter: "2",
-      wines: [
-        {
-          id: "1",
-          image: require("../../assets/pergola.png"),
-          nome: "Vinho Pergola Tinto Suave Pergola",
-        },
-      ],
-    },
-    { id: "3", name: "Vinho Chileno", filter: "3", wines: [] },
-    { id: "4", name: "Vinho Português", filter: "4", wines: [] },
-  ];
-
-  const filteredWineTypes = wineTypes.find(
-    (wineType) => wineType.filter === selectedFilter
-  );
+  const getTextColor = (filtro) => {
+    return {
+      color: selectedFilter === filtro ? "#FFF" : "#000",
+    };
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => setSearchText(text)}
-          value={searchText}
-          onPressIn={clearSearchText}
+          onChangeText={(texto) => setTexto(texto)}
+          value={texto}
+          onPressIn={limparTexto}
         />
       </View>
-      <View style={styles.logoContainer}>
-        <Image
-          source={require("../../assets/logo.jpg")}
-          style={styles.logo}
-        />
+      <View style={styles.filtro}>
+        <TouchableOpacity onPress={() => handlePress("Argentina")}>
+          <View style={[styles.filtroTexto, getContainerStyle("Argentina")]}>
+            <Text style={getTextColor("Argentina")}>Argentina</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress("Brasil")}>
+          <View style={[styles.filtroTexto, getContainerStyle("Brasil")]}>
+            <Text style={getTextColor("Brasil")}>Brasil</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress("Chile")}>
+          <View style={[styles.filtroTexto, getContainerStyle("Chile")]}>
+            <Text style={getTextColor("Chile")}>Chile</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress("Uruguai")}>
+          <View style={[styles.filtroTexto, getContainerStyle("Uruguai")]}>
+            <Text style={getTextColor("Uruguai")}>Uruguai</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-      <View style={styles.filtersContainer}>
-        {filters.map((filter) => (
-          <TouchableOpacity
-            key={filter.id}
-            onPress={() => handlePress(filter.id)}
-          >
-            <View style={[styles.filter, getContainerStyle(filter.id)]}>
-              <Image
-                source={filter.image}
-                style={styles.filterImage}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
+      <View style={styles.categorias}>
+        <View style={styles.lacunasCategorias}>
+          <Image
+            source={require("../../assets/ImagemCarnes.png")}
+            style={styles.imagemCategorias}
+          />
+          <Text style={styles.textoPrin}>Carnes</Text>
+          <Text style={styles.textoSecun}>(2)</Text>
+        </View>
+
+        <View style={styles.lacunasCategorias}>
+          <Image
+            source={require("../../assets/ImagemMassas.png")}
+            style={styles.imagemCategorias}
+          />
+          <Text style={styles.textoPrin}>Massas</Text>
+          <Text style={styles.textoSecun}>(1)</Text>
+        </View>
       </View>
 
-      {/* Adicionando as views para os tipos de vinhos */}
-      <View style={styles.wineTypeContainer}>
-        {filteredWineTypes &&
-          filteredWineTypes.wines.map((wine) => (
-            <View
-              key={wine.id}
-              style={[
-                styles.wineType,
-                { backgroundColor: selectedFilter === wine.filter ? "#D9D0E3" : "#6C008B" },
-              ]}
-            >
-              <Image source={wine.image} style={styles.wineTypeImage} />
-              <Text style={styles.wineTypeText}>{wine.nome}</Text>
-            </View>
-          ))}
+      <View style={styles.categorias}>
+        <View style={styles.lacunasCategorias}>
+          <Image
+            source={require("../../assets/ImagemFrios.png")}
+            style={styles.imagemCategorias}
+          />
+          <Text style={styles.textoPrin}>Frios</Text>
+          <Text style={styles.textoSecun}>(2)</Text>
+        </View>
+
+        <View style={styles.lacunasCategorias}>
+          <Image
+            source={require("../../assets/ImagemPeixes.png")}
+            style={styles.imagemCategorias}
+          />
+          <Text style={styles.textoPrin}>Peixes</Text>
+          <Text style={styles.textoSecun}>(1)</Text>
+        </View>
       </View>
     </View>
   );
@@ -128,7 +110,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#fff",
   },
 
@@ -152,72 +133,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-
-  logo: {
-    width: 190,
-    height: 190,
-    flexShrink: 0,
-    borderRadius: 20,
-    backgroundColor: "rgba(225, 121, 255, 0.93)",
-  },
-
-  filtersContainer: {
+  filtro: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 20,
-  },
-
-  filter: {
-    width: 73,
-    height: 72,
-    flexShrink: 0,
-    borderRadius: 20,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#D9D0E3",
   },
 
-  filterImage: {
-    width: 50,
-    height: 50,
-  },
-
-  wineTypeContainer: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    marginTop: 20,
-    marginLeft: 20,
-  },
-  wineType: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: 370,
-    height: 99,
-    marginBottom: 10,
+  filtroTexto: {
     borderRadius: 20,
+    padding: 8,
+    margin: 10,
+    fontSize: 14,
+    paddingRight: 10,
+    paddingLeft: 10,
+    marginTop: 50,
   },
 
-  wineTypeImage: {
-    width: 19,
-    height: 85,
-    marginLeft: 30,
+  categorias: {
+    flexDirection: "row",
   },
 
-  wineTypeDetails: {
-    marginLeft: 10, 
+  textoPrin: {
+    fontSize: 18,
+    color: "#2D0C57",
+    fontWeight: "bold",
+    paddingLeft: 14,
+    paddingTop: 5,
   },
 
-  wineTypeText: {
-    color: "#fff",
-    fontSize: 16,
-    paddingLeft: 20,
-    marginRight: 30,
+  textoSecun: {
+    color: "#9586A8",
+    fontSize: 12,
+    paddingLeft: 14,
+    paddingTop: 1,
+    paddingBottom: 5,
+  },
 
+  lacunasCategorias: {
+    borderWidth: 1,
+    borderColor: "#D9D0E3",
+    margin: 10,
+    borderRadius: 8,
   },
 });
-
