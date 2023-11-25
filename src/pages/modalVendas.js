@@ -6,9 +6,15 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import useStorage from "./useStorage";
 
 export function ModalVendas({ produtos, handleClose, itemId }) {
   const selectedItem = produtos.find((item) => item.id === itemId);
+  const { saveItem } = useStorage();
+
+  async function salvarItem() {
+    await saveItem("@pass", selectedItem.id);
+  }
 
   if (!selectedItem) {
     return (
@@ -68,7 +74,14 @@ export function ModalVendas({ produtos, handleClose, itemId }) {
         </View>
         <View style={styles.ultimosBotao}>
           <Text style={styles.preco}>{selectedItem.preco}</Text>
-          <TouchableOpacity style={styles.botao}>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => {
+              handleClose();
+              alert("Adicionado ao carrinho");
+              salvarItem();
+            }}
+          >
             <Text style={styles.botaoText}>Adicionar ao Carrinho</Text>
           </TouchableOpacity>
         </View>
