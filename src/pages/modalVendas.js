@@ -47,7 +47,7 @@ export function ModalVendas({ produtos, handleClose, itemId }) {
         <View style={styles.conteudoMeio}>
           <View>
             <Image
-              source={require("../../assets/ImagemVinhoGrupaGrande.png")}
+              source={selectedItem.imageGrande}
               style={styles.imagemFavorito}
             />
           </View>
@@ -75,19 +75,19 @@ export function ModalVendas({ produtos, handleClose, itemId }) {
         <View style={styles.ultimosBotao}>
           <Text style={styles.preco}>R$ {selectedItem.preco}</Text>
           <TouchableOpacity
-           style={styles.botao}
-           onPress={() => {
-            handleClose();
-            alert("Adicionado ao carrinho");
-            salvarItem();
-          }}
-        >
-          <Text style={styles.botaoText}>Adicionar ao Carrinho</Text>
-        </TouchableOpacity>
+            style={styles.botao}
+            onPress={() => {
+              handleClose();
+              alert("Adicionado ao carrinho");
+              salvarItem();
+            }}
+          >
+            <Text style={styles.botaoText}>Adicionar ao Carrinho</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({

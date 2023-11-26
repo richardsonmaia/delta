@@ -23,7 +23,7 @@ export default function App() {
     setModalItemId(itemId);
   }
   const ListaProdutos = () => {};
-  
+
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.item} onPress={() => abrirVenda(item.id)}>
       <View style={styles.image}>
@@ -73,8 +73,30 @@ export default function App() {
           <Text style={styles.textTitulo}>Chile</Text>
         </View>
         <FlatList
-          style={styles.FlatList}
           data={dataChi}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        />
+
+        <View>
+          <Text style={styles.textTitulo}>Portugal</Text>
+        </View>
+        <FlatList
+          data={dataPor}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        />
+
+        <View>
+          <Text style={styles.textTitulo}>Brasil</Text>
+        </View>
+        <FlatList
+          style={styles.FlatList}
+          data={dataBra}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           horizontal={true}
@@ -88,7 +110,7 @@ export default function App() {
               setModalVisible(false);
               setModalItemId(null);
             }}
-            itemId={modalItemId} 
+            itemId={modalItemId}
           />
         </Modal>
       </View>
