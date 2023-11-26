@@ -6,27 +6,28 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import useStorage from "./useStorage";
 import { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { data } from "./dataService";
+import { ModalPagamento } from "./modalPagamento";
 
 const FinalizarCompraButton = ({ onPress }) => (
-  <TouchableOpacity
-    style={styles.finalizarCompraButton}
-    onPress={onPress}
-  >
+  <TouchableOpacity style={styles.finalizarCompraButton} onPress={onPress}>
     <Text style={styles.finalizarCompraButtonText}>Finalizar Compra</Text>
   </TouchableOpacity>
 );
 
-
 export default function App() {
   const [carrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const focused = useIsFocused();
-
+  const [modalVisible, setModalVisible] = useState(false);
   const { getItem, removeItem } = useStorage();
+  function abrirPagamento() {
+    setModalVisible(true);
+  }
 
   useEffect(() => {
     async function loadProdutos() {
@@ -45,7 +46,7 @@ export default function App() {
     const novoCarrinhoProdutos = await removeItem("@pass", item.id);
     setCarrinhoProdutos(novoCarrinhoProdutos);
   };
-  
+
   const valorTotal = produtosNaFlatList.reduce(
     (total, produto) => total + produto.preco,
     0
@@ -55,7 +56,9 @@ export default function App() {
     <View style={styles.container}>
       <FlatList
         data={produtosNaFlatList}
-        keyExtractor={(item, index) => (item && item.id ? item.id.toString() : index.toString())}
+        keyExtractor={(item, index) =>
+          item && item.id ? item.id.toString() : index.toString()
+        }
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.produtoCar}
@@ -68,7 +71,8 @@ export default function App() {
             <Text style={styles.produtoTextPreco}>R$ {item.preco}</Text>
           </TouchableOpacity>
         )}
-      />{produtosNaFlatList.length > 0 && (
+      />
+      {produtosNaFlatList.length > 0 && (
         <View style={styles.totalContainer}>
           <Text style={styles.totalText}>Total: {valorTotal.toFixed(2)}</Text>
         </View>
@@ -76,16 +80,18 @@ export default function App() {
       {produtosNaFlatList.length === 0 && (
         <Text style={styles.mensagemCarrinhoVazio}>Carrinho vazio</Text>
       )}
-      {produtosNaFlatList.length > 0 && (  
+      {produtosNaFlatList.length > 0 && (
         <TouchableOpacity
           style={styles.finalizarCompraButton}
-          onPress={() => {
-            Alert.alert("Alerta", "Botão de Finalizar Compra pressionado");
-          }}
+          onPress={() => abrirPagamento()}
         >
           <Text style={styles.finalizarCompraButtonText}>Finalizar Compra</Text>
         </TouchableOpacity>
       )}
+      <Modal visible={modalVisible}>
+        <ModalPagamento handleClose={() => setModalVisible(false)} />
+      </Modal>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -97,11 +103,11 @@ const styles = StyleSheet.create({
   },
   totalContainer: {
     backgroundColor: "#6C008B",
-  borderRadius: 18,
-  paddingVertical: 15,
-  paddingHorizontal: 20,
-  alignItems: "center",
-  marginBottom: 20, 
+    borderRadius: 18,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    marginBottom: 20,
   },
   totalText: {
     color: "#FFF",
@@ -110,7 +116,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   mensagemCarrinhoVazio: {
-    
     textAlign: "center",
     fontSize: 30,
     color: "#6C008B",
@@ -152,7 +157,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
     paddingLeft: 10,
-
   },
   finalizarCompraContainer: {
     position: "absolute",
