@@ -31,7 +31,7 @@ export default function App() {
       </View>
       <View style={styles.conteudoItem}>
         <Text style={styles.textoItem}>{item.nome}</Text>
-        <Text style={styles.textoPreco}>{item.preco}</Text>
+        <Text style={styles.textoPreco}>R$ {item.preco}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -88,7 +88,7 @@ export default function App() {
               setModalVisible(false);
               setModalItemId(null);
             }}
-            itemId={modalItemId} // Passar o itemId para a modal
+            itemId={modalItemId} 
           />
         </Modal>
       </View>

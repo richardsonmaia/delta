@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+import { StatusBar, Alert } from "react-native";
 import {
   StyleSheet,
   Text,
@@ -12,9 +12,20 @@ import { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { data } from "./dataService";
 
+const FinalizarCompraButton = ({ onPress }) => (
+  <TouchableOpacity
+    style={styles.finalizarCompraButton}
+    onPress={onPress}
+  >
+    <Text style={styles.finalizarCompraButtonText}>Finalizar Compra</Text>
+  </TouchableOpacity>
+);
+
+
 export default function App() {
   const [carrinhoProdutos, setCarrinhoProdutos] = useState([]);
   const focused = useIsFocused();
+
   const { getItem, removeItem } = useStorage();
 
   useEffect(() => {
@@ -34,11 +45,17 @@ export default function App() {
     const novoCarrinhoProdutos = await removeItem("@pass", item.id);
     setCarrinhoProdutos(novoCarrinhoProdutos);
   };
+  
+  const valorTotal = produtosNaFlatList.reduce(
+    (total, produto) => total + produto.preco,
+    0
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
         data={produtosNaFlatList}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => (item && item.id ? item.id.toString() : index.toString())}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.produtoCar}
@@ -48,10 +65,27 @@ export default function App() {
               <Image source={item.image} style={styles.imagemProduto} />
             </View>
             <Text style={styles.produtoTextNome}>{item.nome}</Text>
-            <Text style={styles.produtoTextPreco}>{item.preco}</Text>
+            <Text style={styles.produtoTextPreco}>R$ {item.preco}</Text>
           </TouchableOpacity>
         )}
-      />
+      />{produtosNaFlatList.length > 0 && (
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalText}>Total: {valorTotal.toFixed(2)}</Text>
+        </View>
+      )}
+      {produtosNaFlatList.length === 0 && (
+        <Text style={styles.mensagemCarrinhoVazio}>Carrinho vazio</Text>
+      )}
+      {produtosNaFlatList.length > 0 && (  
+        <TouchableOpacity
+          style={styles.finalizarCompraButton}
+          onPress={() => {
+            Alert.alert("Alerta", "Botão de Finalizar Compra pressionado");
+          }}
+        >
+          <Text style={styles.finalizarCompraButtonText}>Finalizar Compra</Text>
+        </TouchableOpacity>
+      )}
       <StatusBar style="auto" />
     </View>
   );
@@ -60,6 +94,27 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+  },
+  totalContainer: {
+    backgroundColor: "#6C008B",
+  borderRadius: 18,
+  paddingVertical: 15,
+  paddingHorizontal: 20,
+  alignItems: "center",
+  marginBottom: 20, 
+  },
+  totalText: {
+    color: "#FFF",
+    fontSize: 18,
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  mensagemCarrinhoVazio: {
+    
+    textAlign: "center",
+    fontSize: 30,
+    color: "#6C008B",
+    marginTop: 280,
   },
   produtoCar: {
     backgroundColor: "#6C008B",
@@ -97,5 +152,33 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
     paddingLeft: 10,
+
+  },
+  finalizarCompraContainer: {
+    position: "absolute",
+    bottom: 0,
+    borderRadius: 20,
+    width: "100%",
+    padding: 20,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#6C008B",
+    alignItems: "center",
+  },
+  finalizarCompraButton: {
+    position: "absolute",
+    marginTop: 600,
+    marginLeft: 113,
+    borderWidth: 5,
+    borderRadius: 18,
+    backgroundColor: "#6C008B",
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    alignItems: "center",
+  },
+  finalizarCompraButtonText: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

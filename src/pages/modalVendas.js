@@ -73,7 +73,7 @@ export function ModalVendas({ produtos, handleClose, itemId }) {
           <Text style={styles.textoSegundo}>{selectedItem.teor}</Text>
         </View>
         <View style={styles.ultimosBotao}>
-          <Text style={styles.preco}>{selectedItem.preco}</Text>
+          <Text style={styles.preco}>R$ {selectedItem.preco}</Text>
           <TouchableOpacity
            style={styles.botao}
            onPress={() => {
